@@ -34,6 +34,7 @@ exports.decorateHyperTerm = (HyperTerm, { React, notify }) => {
       const overridenProps = {
         backgroundColor: 'black',
         customCSS: `
+          ${this.props.customCSS || ''}
           body {
             background-image: ${noisePng};
             background-size: 100px 100px;
