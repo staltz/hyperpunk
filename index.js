@@ -2,12 +2,15 @@ const noise1Png = require('./noise1');
 const noise2Png = require('./noise2');
 const noise3Png = require('./noise3');
 const HUE_SHIFT_INTENSITY = 4;
+const BRIGHT_GREEN = '#28FC91';
+const DARK_GREEN = '#0F2218';
+const TEXT_GREEN = '51, 255, 0';
 
 exports.decorateConfig = (config) => {
   return Object.assign({}, config, {
-    foregroundColor: '#28FC91',
-    backgroundColor: '#0F2218',
-    borderColor: '#28FC91',
+    foregroundColor: BRIGHT_GREEN,
+    backgroundColor: DARK_GREEN,
+    borderColor: BRIGHT_GREEN,
     cursorColor: '#40FFFF',
   });
 }
@@ -31,13 +34,51 @@ exports.decorateHyperTerm = (HyperTerm, { React, notify }) => {
 
     render() {
       const noisePng = [noise1Png, noise2Png, noise3Png][this.state.noise];
+      const noiseCss = `
+        background-image: ${noisePng};
+        background-size: 100px 100px;
+      `;
+      const textShadow = generateTextShadow();
+
       const overridenProps = {
         backgroundColor: 'black',
         customCSS: `
           ${this.props.customCSS || ''}
           body {
-            background-image: ${noisePng};
-            background-size: 100px 100px;
+            ${noiseCss}
+          }
+          .tabs_nav {
+            ${noiseCss}
+          }
+          .tabs_nav .tabs_title {
+            color: rgb(${TEXT_GREEN}) !important;
+            font-weight: bold !important;
+            ${textShadow}
+          }
+          .tabs_list {
+            background-color: ${DARK_GREEN} !important;
+            background-image: none !important;
+          }
+          .tab_tab {
+            border-width: 0px !important;
+            border-right: 0px solid transparent !important;
+            border-left: 1px solid ${BRIGHT_GREEN} !important;
+          }
+          .tab_tab:not(.tab_active) {
+            color: rgba(${TEXT_GREEN}, 0.7);
+          }
+          .tab_tab.tab_active {
+            height: calc(100% + 1px);
+            ${noiseCss}
+            border-left: 0px solid ${BRIGHT_GREEN} !important;
+            ${textShadow}
+            font-weight: bold;
+            color: rgb(${TEXT_GREEN});
+          }
+          /* Hide hardcoded black bottom border */
+          .tab_active:before {
+            border-bottom: none !important;
+            border-left: 1px solid transparent !important;
           }
         `,
       };
@@ -87,12 +128,9 @@ exports.decorateTerm = (Term, { React, notify }) => {
     }
 
     _drawFrame () {
-      let x = -1 + 2 * Math.random();
-      x = x * x;
-      const intensity = HUE_SHIFT_INTENSITY * x;
       this._globalStyle.innerHTML = `
         x-screen {
-          text-shadow: ${intensity}px 0 1px rgba(0,30,255,0.5), ${-intensity}px 0 1px rgba(255,0,80,0.3), 0 0 3px;
+          ${generateTextShadow()}
         }
       `;
     }
@@ -108,3 +146,10 @@ exports.decorateTerm = (Term, { React, notify }) => {
     }
   }
 };
+
+function generateTextShadow() {
+  let x = -1 + 2 * Math.random();
+  x = x * x;
+  const intensity = HUE_SHIFT_INTENSITY * x;
+  return `text-shadow: ${intensity}px 0 1px rgba(0,30,255,0.5), ${-intensity}px 0 1px rgba(255,0,80,0.3), 0 0 3px !important;`
+}
