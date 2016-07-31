@@ -2,7 +2,7 @@
 
 > Cyberpunk HyperTerm theme
 
-![](https://cdn.rawgit.com/staltz/hyperpunk/master/screenshot.png)
+![](screenshot.png)
 
 ## Install
 
