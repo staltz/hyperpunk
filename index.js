@@ -15,7 +15,7 @@ exports.decorateConfig = (config) => {
   });
 }
 
-exports.decorateHyperTerm = (HyperTerm, { React, notify }) => {
+exports.decorateHyper = (HyperTerm, { React, notify }) => {
   return class extends React.Component {
     constructor(props, context) {
       super(props, context);
